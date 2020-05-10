@@ -11,20 +11,21 @@
     <script src="Client.js"></script>
     <link rel="stylesheet" type="text/css" href="layout.css" />
   </head>
-  <body>
 
+  <body>
   <div id="wrapper">
 
     <div class="register-container" id="loginForm">
 			<header class="register-header">
 				<h1>Chatbot App</h1>
 			</header>
+      
 			<main class="register-main">
-					<div class="form-control">
-						<label for="username"><b>Username</b></label>
-						<input type="text" name="username" id="txtUsername" class="Register-on-enter" placeholder="Enter username..."/>            
-            <button type="submit" id="btnRegister" class="btn">Register</button>
-					</div>
+				<div class="form-control">
+					<label for="username"><b>Username</b></label>
+					<input type="text" name="username" id="txtUsername" class="Register-on-enter" placeholder="Enter username..."/>
+          <button type="submit" id="btnRegister" class="btn">Register</button>
+				</div>
 			</main>
     </div>
     
@@ -38,19 +39,20 @@
           </div>        
         </div>
       </header>
-      <main class="room-main">   
-      <div id="rm">     
-        <div class="chat-sidebar">
-          <div id="boxTitle">Users Online</div>
-          <div id="boxContentuser1"></div>
-        </div>       
-      </div>
 
-         <div id="rm">  
-        <div class="room-sidebar">
-          <div id="boxTitle">Available Room list</div>
-          <div id="boxContentroom"></div>
-        </div> 
+      <main class="room-main">   
+        <div id="rm">     
+          <div class="chat-sidebar">
+            <div id="boxTitle">Users Online</div>
+            <div id="boxContentuser1"></div>
+          </div>       
+        </div>
+
+        <div id="rm">  
+          <div class="room-sidebar">
+            <div id="boxTitle">Available Room list</div>
+            <div id="boxContentroom"></div>
+          </div> 
 
           <div class="room-form-container">
             <form id="room-form">
@@ -58,7 +60,7 @@
               <input type="button" id="btnSendRoom" value="Join" class="btn"/>
             </form>
           </div>
-          </div>            
+        </div>            
       </main> 
     </div>
 
@@ -70,32 +72,33 @@
             <b class="Hi"> Welcome <span id="currentUser2"></span> in <span id="currentRoom"></span> room</b>
             <input type="button" id="btnLogout2" value="Logout">
             <input type="button" id="btnLeave" value="Leave Room">
-          </div>        
+          </div>
         </div>
       </header>
+
       <main class="chat-main">
         <div>
-        <div class="chat-sidebar">
-          <div id="boxTitle">Users Online</div>
-          <div id="boxContentuser2"></div>
+          <div class="chat-sidebar">
+            <div id="boxTitle">Users Online</div>
+            <div id="boxContentuser2"></div>
+          </div>
         </div>
-      </div>
+
         <div>
           <div class="chat-sidebar">
             <div id="listMessages"></div>
-          </div>  
-        </div>     
+          </div>
+        </div>
       </main>
+
       <div class="chat-form-container">
         <div id="notification"></div>
           <form id="chat-form">
             <input type="text" id="txtMessage" class="Submit-on-enter"/>
             <input type="button" id="btnSendMessage" value="Send" class="btn"/>
           </form>
-        </div>  
+        </div>
+      </div>
     </div>
-
-  </div>
-
   </body>
 </html>
