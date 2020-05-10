@@ -6,13 +6,20 @@ app.set("views", "./views");
 
 var server = require("http").Server(app);
 var io = require("socket.io")(server);
-server.listen(3000);
+
+const PORT = 3000 || process.env.PORT;
+server.listen(PORT, function(){
+    console.log('Example app listening on port %d!', PORT);
+});
 
 var listUsers=[];
+var listRoom=[];
+let newRoom = {
+  name: String,
+  limit: Number
+}
 
 io.on("connection", function(socket){
-  console.log("One user has connected " + socket.id);
-
   // client send username to server
   socket.on("Client-send-Username", function(data){
     if (data != ""){
@@ -38,8 +45,6 @@ io.on("connection", function(socket){
     socket.broadcast.emit("Server-send-rooms-list", listRoom);
   });
 
-  var listRoom=[];
-
   socket.on("Check-room", function(data){
     var DuplicateRoom = 0;
     for(r in socket.adapter.rooms){
@@ -52,13 +57,7 @@ io.on("connection", function(socket){
     } else {
       socket.emit("Room-exist", data);
     }
-
   });
-    
-  let newRoom = {
-    name: String,
-    limit: Number
-  }
 
   socket.on("Create-new-room", function(data){
     if (data != ""){
@@ -73,7 +72,7 @@ io.on("connection", function(socket){
       socket.adapter.rooms[data].limit = 2;
       listRoom.push(newRoom.name);
       socket.emit("Server-send-room-success", newRoom.name);
-      io.sockets.emit("Server-send-rooms-list", listRoom);     
+      io.sockets.emit("Server-send-rooms-list", listRoom);
     } else {
       socket.emit("Box-blank", "Box cannot be blank");
     }
@@ -84,7 +83,6 @@ io.on("connection", function(socket){
       let filterRoom = listRoom.filter(function(room){
         return room.name == data;
       });
-
       for(room in socket.adapter.rooms){
         if(data == room){
           if(socket.adapter.rooms[data].length < socket.adapter.rooms[data].limit){
@@ -92,10 +90,10 @@ io.on("connection", function(socket){
             socket.join(room);
             socket.Room=data;
             socket.emit("Server-send-room-success", data);
-            io.sockets.emit("Server-send-rooms-list", listRoom);          
+            io.sockets.emit("Server-send-rooms-list", listRoom);
           }else{
             socket.emit("Reject-by-limited-members");
-            io.sockets.emit("Server-send-rooms-list", listRoom);  
+            io.sockets.emit("Server-send-rooms-list", listRoom);
           }
         }
       }    
@@ -122,6 +120,38 @@ io.on("connection", function(socket){
   socket.on("User-stop-typing", function(){
     io.sockets.emit("Someone-stop-typing");
   });
+
+  socket.on("disconnect", function(){
+    var index = listUsers.indexOf(socket.Username)
+    var check = false;
+    listUsers.splice(index, 1);
+
+    io.sockets.emit("Server-send-users-list", listUsers);
+  
+    var listTempRoom = [];
+    for(room in socket.adapter.rooms){
+      if(room.length < 15){
+        listTempRoom.push(room);
+      }
+    }
+
+    var BackupRoom =[];
+    for(var i = 0; i < listRoom.length; i++){
+      for(var j = 0; j < listTempRoom.length; j++){
+        if(listRoom[i].name == listTempRoom[j]){
+          BackupRoom.push(listRoom[i]);
+        }
+      }
+    }
+
+    listRoom.splice(0);
+    for(var i = 0; i < BackupRoom.length; i++){
+      listRoom.push(BackupRoom[i]);
+    }
+
+    socket.emit("Server-send-rooms-list", listRoom);
+    socket.broadcast.emit("Server-send-rooms-list", listRoom);
+  });
 });
 
 app.get("/", function(req, res){
@@ -137,5 +167,3 @@ return {
     time: moment().format('h:mm a')
     }
 }
-
-
