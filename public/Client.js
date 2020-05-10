@@ -1,11 +1,19 @@
 var socket = io("http://localhost:3000");
 
+socket.on("Box-blank", function(data){
+  alert(data);
+});
+
 socket.on("Server-send-registration-fail", function(){
   alert("The Username has been registered");
 });
 
-socket.on("Box-blank", function(data){
-  alert(data);
+socket.on("Server-send-registration-success", function(data){
+  $("#currentUser1").html(data);
+  $("#currentUser2").html(data);
+  $("#loginForm").hide(0);
+  $("#roomForm").show(0);
+  $("#chatForm").hide(0);
 });
 
 socket.on("Server-send-users-list", function(data){
@@ -15,14 +23,6 @@ socket.on("Server-send-users-list", function(data){
     $("#boxContentuser1").append("<div class='user'>" + i + "</div>");
     $("#boxContentuser2").append("<div class='user'>" + i + "</div>");
   });
-});
-
-socket.on("Server-send-registration-success", function(data){
-  $("#currentUser1").html(data);
-  $("#currentUser2").html(data);
-  $("#loginForm").hide(0);
-  $("#roomForm").show(0);
-  $("#chatForm").hide(0);
 });
 
 socket.on("Room-doesn't-exist", function(data){  
@@ -35,13 +35,6 @@ socket.on("Room-exist", function(data){
 
 socket.on("Reject-by-limited-members", function(){
     alert("This room is full");
-})
-
-socket.on("Server-send-rooms-list", function(data){
-  $("#boxContentroom").html("");
-  data.forEach(function(r){
-    $("#boxContentroom").append("<div class='room'>" + r + "</div>");
-  });
 });
 
 socket.on("Server-send-room-success", function(data){
@@ -49,6 +42,13 @@ socket.on("Server-send-room-success", function(data){
   $("#loginForm").hide(0);
   $("#roomForm").hide(0);
   $("#chatForm").show(0);
+});
+
+socket.on("Server-send-rooms-list", function(data){
+  $("#boxContentroom").html("");
+  data.forEach(function(r){
+    $("#boxContentroom").append("<div class='room'>" + r + "</div>");
+  });
 });
 
 socket.on("Server-send-mesage", function(data){
@@ -92,16 +92,9 @@ $(document).ready(function(){
       $("#txtUsername").val("");
       return false;
     }
-  })
-
-  $("#btnLogout1").click(function(){
-    socket.emit("Logout");
-    $("#chatForm").hide(0);
-    $("#roomForm").hide(0);
-    $("#loginForm").show(0);
   });
 
-  $("#btnLogout2").click(function(){
+  $("#btnLogout1").click(function(){
     socket.emit("Logout");
     $("#chatForm").hide(0);
     $("#roomForm").hide(0);
@@ -122,7 +115,14 @@ $(document).ready(function(){
       $("#txtRoom").val("");
       return false;
     }
-  })
+  });
+
+  $("#btnLogout2").click(function(){
+    socket.emit("Logout");
+    $("#chatForm").hide(0);
+    $("#roomForm").hide(0);
+    $("#loginForm").show(0);
+  });
 
   $("#btnLeave").click(function(){
     socket.emit("Leave", $("#currentRoom").val());
@@ -145,13 +145,13 @@ $(document).ready(function(){
       $("#txtMessage").val("");
       return false;
     }
-  })
+  });
 
   $("#txtMessage").focusin(function(){
     socket.emit("User-is-typing");
-  })
+  });
 
   $("#txtMessage").focusout(function(){
     socket.emit("User-stop-typing");
-  })
+  });
 });
