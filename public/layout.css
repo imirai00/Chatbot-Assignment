@@ -21,21 +21,21 @@ body {
 }
 
 #txtUsername{
-    background-color:  #f0f2d0; 
+    background-color:  #f0f2d0;
     border:solid 1px black;
 }
 
 #boxTitle{
     color: yellowgreen;
-    padding:5px; 
-    text-align: center; 
-    font-weight: bold; 
+    padding:5px;
+    text-align: center;
+    font-weight: bold;
 }
 
 #boxContent{
     color: #272ef2;
-    border-top: none; 
-    padding: 5px; 
+    border-top: none;
+    padding: 5px;
     text-align: left;
 }
 
@@ -44,14 +44,12 @@ body {
     text-align: right;
 }
 
-#listMessages{
-    height:200px; 
-    margin-bottom: 15px;
+.Hi span{
+	color: blue;
 }
 
-#txtMessage{
-    background-color: transparent; 
-    border: solid 1px black
+.user{
+	margin:10px;
 }
 
 .register-container {
@@ -161,10 +159,17 @@ body {
 	flex: 1;
 }
 
+#txtMessage{
+    background-color: transparent;
+    border: solid 1px black
+}
+
 #listMessages {
 	padding: 30px;
 	max-height: 500px;
 	overflow-y: scroll;
+	height:200px; 
+    margin-bottom: 15px;
 }
 
 #listMessages .message {
@@ -188,10 +193,6 @@ body {
 
 #listMessages .message .text {
 	color: #8314a8;
-}
-
-.Hi span{
-	color: blue;
 }
 
 .room-container {
@@ -242,8 +243,4 @@ body {
 	padding: 5px;
 	height: 40px;
 	flex: 1;
-}
-
-.user{
-	margin:10px;
 }
