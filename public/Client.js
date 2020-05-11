@@ -1,4 +1,4 @@
-var socket = io("http://localhost:3000");
+var socket = io("/");
 
 socket.on("Box-blank", function(data){
   alert(data);
@@ -33,8 +33,8 @@ socket.on("Room-exist", function(data){
     socket.emit("Join-room", data);
 });
 
-socket.on("Reject-by-limited-members", function(){
-    alert("This room is full");
+socket.on("Limited-users", function(){
+    alert("Room is full of users.");
 });
 
 socket.on("Server-send-room-success", function(data){
@@ -71,6 +71,12 @@ socket.on("Someone-is-typing", function(data){
 
 socket.on("Someone-stop-typing", function(){
   $("#notification").html("");
+});
+
+socket.on("Room-name-succes", function(){
+  $("#chatForm").hide(0);
+  $("#roomForm").show(0);
+  $("#loginForm").hide(0);
 });
 
 $(document).ready(function(){
@@ -125,10 +131,14 @@ $(document).ready(function(){
   });
 
   $("#btnLeave").click(function(){
-    socket.emit("Leave", $("#currentRoom").val());
-    $("#chatForm").hide(0);
-    $("#roomForm").show(0);
-    $("#loginForm").hide(0);
+    var roomName = prompt("Input room name you want to leave:");
+    if (roomName == null || roomName == "") {
+      alert("You must enter the room name");
+    }else{
+      socket.emit("leave-room", roomName);
+      this.reset;
+    }
+
   });
 
   $("#btnSendMessage").click(function(){
