@@ -74,17 +74,17 @@ io.on("connection", function(socket){
   socket.on("Join-room", function(data){
     if (data != ""){
       for(room in socket.adapter.rooms){   
-        if(socket.adapter.rooms[data].length < socket.adapter.rooms[data].limit){
-          // listRoom.splice(0);
-          socket.join(room);
-          socket.Room=data;
-
-          socket.emit("Server-send-room-success", data);
-          io.sockets.emit("Server-send-rooms-list", listRoom);
-        } else {
-          socket.emit("Limited-users");
-          io.sockets.emit("Server-send-rooms-list", listRoom); 
-        }     
+        if(data == room){   
+          if(socket.adapter.rooms[data].length < socket.adapter.rooms[data].limit){
+            socket.join(room);
+            socket.Room=data;
+            socket.emit("Server-send-room-success", data);
+            io.sockets.emit("Server-send-rooms-list", listRoom);
+          } else {
+            socket.emit("Limited-users");
+            io.sockets.emit("Server-send-rooms-list", listRoom); 
+          }
+        }    
       }
     } else {
       socket.emit("Box-blank", "Box cannot be blank");
