@@ -14,10 +14,6 @@ server.listen(PORT, function(){
 
 var listUsers=[];
 var listRoom=[];
-let newRoom = {
-  name: String,
-  limit: Number
-}
 
 io.on("connection", function(socket){
   // client send username to server
@@ -30,6 +26,7 @@ io.on("connection", function(socket){
         socket.Username = data;
         socket.emit("Server-send-registration-success", data);
         io.sockets.emit("Server-send-users-list", listUsers);
+        io.sockets.emit("Server-send-rooms-list", listRoom);
       }
     } else {
       socket.emit("Box-blank", "Box cannot be blank");
@@ -46,13 +43,13 @@ io.on("connection", function(socket){
   });
 
   socket.on("Check-room", function(data){
-    var DuplicateRoom = 0;
+    var checkRoom = 0;
     for(r in socket.adapter.rooms){
       if (r == data){
-        DuplicateRoom = 1;
+        checkRoom = 1;
       }
     }
-    if (DuplicateRoom != 1){
+    if (checkRoom != 1){
       socket.emit("Room-doesn't-exist", data);
     } else {
       socket.emit("Room-exist", data);
@@ -63,15 +60,11 @@ io.on("connection", function(socket){
     if (data != ""){
       socket.join(data);
       socket.Room = data;
-      listRoom.splice(0);
-      var number;
-      let newRoom = {
-        'name': data,
-        'limit': number
-      }
+
+      listRoom.push(data);
       socket.adapter.rooms[data].limit = 2;
-      listRoom.push(newRoom.name);
-      socket.emit("Server-send-room-success", newRoom.name);
+
+      socket.emit("Server-send-room-success", data);
       io.sockets.emit("Server-send-rooms-list", listRoom);
     } else {
       socket.emit("Box-blank", "Box cannot be blank");
@@ -80,32 +73,49 @@ io.on("connection", function(socket){
 
   socket.on("Join-room", function(data){
     if (data != ""){
-      let filterRoom = listRoom.filter(function(room){
-        return room.name == data;
-      });
-      for(room in socket.adapter.rooms){
-        if(data == room){
-          if(socket.adapter.rooms[data].length < socket.adapter.rooms[data].limit){
-            listRoom.splice(0);
-            socket.join(room);
-            socket.Room=data;
-            socket.emit("Server-send-room-success", data);
-            io.sockets.emit("Server-send-rooms-list", listRoom);
-          }else{
-            socket.emit("Reject-by-limited-members");
-            io.sockets.emit("Server-send-rooms-list", listRoom);
-          }
-        }
-      }    
+      for(room in socket.adapter.rooms){   
+        if(socket.adapter.rooms[data].length < socket.adapter.rooms[data].limit){
+          // listRoom.splice(0);
+          socket.join(room);
+          socket.Room=data;
+
+          socket.emit("Server-send-room-success", data);
+          io.sockets.emit("Server-send-rooms-list", listRoom);
+        } else {
+          socket.emit("Limited-users");
+          io.sockets.emit("Server-send-rooms-list", listRoom); 
+        }     
+      }
     } else {
       socket.emit("Box-blank", "Box cannot be blank");
     }
   });
 
-  socket.on("Leave", function(data){
+  socket.on("leave-room", function(data){
     socket.leave(data);
-    listRoom.splice(0);
-    io.sockets.emit("Server-send-rooms-list", listRoom);
+    socket.Room=data;
+
+    var check = false;
+    for(room in socket.adapter.rooms){
+      if(room == data){
+        check = true;
+      }
+    }
+
+    if(check == true) {
+      socket.emit("Room-name-succes");
+      io.sockets.emit("Server-send-rooms-list", listRoom);
+    } else {
+      var index = 0;
+      for(var i = 0; i < listRoom.length; i++){
+        if(data == listRoom[i]){
+          index = listRoom.indexOf(data);
+        }
+      }
+      listRoom.splice(index, 1);
+      io.sockets.emit("Server-send-rooms-list", listRoom);
+      socket.emit("Room-name-succes");
+    }
   });
 
   socket.on("User-send-message", function(data){
@@ -119,38 +129,6 @@ io.on("connection", function(socket){
 
   socket.on("User-stop-typing", function(){
     io.sockets.emit("Someone-stop-typing");
-  });
-
-  socket.on("disconnect", function(){
-    var index = listUsers.indexOf(socket.Username)
-    var check = false;
-    listUsers.splice(index, 1);
-
-    io.sockets.emit("Server-send-users-list", listUsers);
-  
-    var listTempRoom = [];
-    for(room in socket.adapter.rooms){
-      if(room.length < 15){
-        listTempRoom.push(room);
-      }
-    }
-
-    var BackupRoom =[];
-    for(var i = 0; i < listRoom.length; i++){
-      for(var j = 0; j < listTempRoom.length; j++){
-        if(listRoom[i].name == listTempRoom[j]){
-          BackupRoom.push(listRoom[i]);
-        }
-      }
-    }
-
-    listRoom.splice(0);
-    for(var i = 0; i < BackupRoom.length; i++){
-      listRoom.push(BackupRoom[i]);
-    }
-
-    socket.emit("Server-send-rooms-list", listRoom);
-    socket.broadcast.emit("Server-send-rooms-list", listRoom);
   });
 });
 
