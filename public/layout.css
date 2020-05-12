@@ -25,18 +25,43 @@ body {
     border:solid 1px black;
 }
 
-#boxTitle{
-    color: yellowgreen;
+.boxTitle{
+    color: rgba(150, 36, 195, 0.794);
     padding:5px;
     text-align: center;
-    font-weight: bold;
+	font-weight: bold;
+	border:solid 1px black;
+	background-color: coral;
 }
 
 #boxContent{
     color: #272ef2;
-    border-top: none;
-    padding: 5px;
+	border-top: none;
     text-align: left;
+}
+
+#boxContentuser1{
+	padding: 30px;
+	overflow-y: scroll;
+	height: 300px;
+	text-align: left;
+	color: white;
+	background-color: rgb(34, 195, 42);
+}
+
+#boxContentuser2{
+	padding: 30px;
+	overflow-y: scroll;
+	height: 200px;
+	text-align: left;
+	color: white;
+	background-color: rgb(34, 195, 42);
+}
+
+#boxContentroom{
+	padding: 30px;
+	height: 200px;
+	overflow-y: scroll; 
 }
 
 #sayHi{
@@ -169,7 +194,6 @@ body {
 	max-height: 500px;
 	overflow-y: scroll;
 	height:200px; 
-    margin-bottom: 15px;
 }
 
 #listMessages .message {
@@ -230,7 +254,7 @@ body {
 .room-form-container {
 	padding: 20px 30px;
     background-color: #3ddcf5;
-	margin: auto;
+	height: 60px;
 }
 
 .room-form-container form {
@@ -241,6 +265,6 @@ body {
 .room-form-container input[type='text'] {
 	font-size: 16px;
 	padding: 5px;
-	height: 40px;
+	height: 50px;
 	flex: 1;
 }
