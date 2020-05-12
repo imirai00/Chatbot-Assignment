@@ -35,22 +35,20 @@
         <div>
           <div id="sayHi">
             <b class="Hi">Hello <span id="currentUser1"></span></b>
-            <input type="button" id="btnLogout1" value="Logout">
+            <input type="button" id="btnLogout" value="Logout">
           </div>        
         </div>
       </header>
 
       <main class="room-main">   
-        <div id="rm">     
-          <div class="chat-sidebar">
-            <div id="boxTitle">Users Online</div>
-            <div id="boxContentuser1"></div>
-          </div>       
+        <div class="rm">               
+            <div class="boxTitle">Users Online</div>
+            <div id="boxContentuser1"></div>                
         </div>
 
-        <div id="rm">  
-          <div class="room-sidebar">
-            <div id="boxTitle">Available Room list</div>
+        <div class="rm">  
+          <div>
+            <div class="boxTitle">Available Room list</div>
             <div id="boxContentroom"></div>
           </div> 
 
@@ -70,24 +68,20 @@
         <div>
           <div id="sayHi">
             <b class="Hi"> Welcome <span id="currentUser2"></span> in <span id="currentRoom"></span> room</b>
-            <input type="button" id="btnLogout2" value="Logout">
             <input type="button" id="btnLeave" value="Leave Room">
           </div>
         </div>
       </header>
 
       <main class="chat-main">
-        <div>
-          <div class="chat-sidebar">
-            <div id="boxTitle">Users Online</div>
-            <div id="boxContentuser2"></div>
-          </div>
+        <div>          
+          <div class="boxTitle">Users Online</div>
+          <div id="boxContentuser2"></div>        
         </div>
 
         <div>
-          <div class="chat-sidebar">
-            <div id="listMessages"></div>
-          </div>
+          <div class="boxTitle">Messages</div>
+          <div id="listMessages"></div>          
         </div>
       </main>
 
